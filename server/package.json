@@ -10,13 +10,15 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.9",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@turf/buffer": "^6.5.0",
     "@turf/helpers": "^6.5.0",
+    "@turf/invariant": "^6.5.0",
     "@turf/turf": "^6.5.0",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.12.8",
     "@types/turf": "^3.5.32",
     "express": "^4.19.2",
     "turf": "^3.0.14"
