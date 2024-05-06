@@ -6,7 +6,7 @@ const app = express();
 const port = 3001;
 
 app.use(express.json());
-app.use(cors()); // Add this line to enable CORS
+app.use(cors()); // Adding cors middleware to allow cross-origin requests
 
 // Generate a random number between min and max
 function getRandomInRange(min: number, max: number) {
@@ -31,7 +31,46 @@ function generateRandomGoalCoordinate(ballPosition: [number, number]): [number, 
   return [newLat, newLng];
 }
 
-app.get('/generate-goal-coordinate', (req: Request, res: Response) => {
+// Function to calculate the direction and distance between two points
+function calculateDirectionAndDistance(ballPosition: [number, number], goalPosition: [number, number]): { direction: [number, number], distance: number } {
+  const deltaX = goalPosition[0] - ballPosition[0];
+  const deltaY = goalPosition[1] - ballPosition[1];
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  // Ensure direction always has exactly two elements
+  const direction: [number, number] = [deltaX / distance, deltaY / distance]; // Normalize the direction vector
+
+  return { direction, distance };
+}
+
+// Function to update the ball position towards the goal
+function moveBallTowardsGoal(ballPosition: [number, number], goalPosition: [number, number], speed: number): [number, number] {
+  const { direction, distance } = calculateDirectionAndDistance(ballPosition, goalPosition);
+
+  // Calculate the new ball position
+  const newBallPosition: [number, number] = [
+    ballPosition[0] + direction[0] * speed,
+    ballPosition[1] + direction[1] * speed
+  ];
+
+  return newBallPosition;
+}
+
+// Handler for updating ball position towards the goal
+app.post('/update-ball-position', (req: Request, res: Response) => {
+  const { ballPosition, goalPosition } = req.body;
+
+  if (!ballPosition || !goalPosition) {
+    return res.status(400).json({ error: 'Ball position and goal position are required.' });
+  }
+
+  // Move the ball towards the goal with a speed of 0.1 units per iteration
+  const newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
+
+  // Send the updated ball position back to the client
+  res.json({ newBallPosition });
+});
+
+app.post('/generate-goal-coordinate', (req: Request, res: Response) => {
   const { ballPosition } = req.query;
 
   if (!ballPosition) {

@@ -19,7 +19,19 @@ const App: React.FC = () => {
     const handleMovement = (event: any) => {
       const newPosition: [number, number] = [event.coords.latitude, event.coords.longitude];
       setBallPosition(newPosition);
-      axios.post(url + '/update-ball-position', { position: newPosition });
+      
+      const fetchNewBallPosition = async () => {
+        try {
+          const response = await axios.post(url + '/update-ball-position', { ballPosition: ballPosition });
+          setBallPosition(response.data.newBallPosition);
+        } catch (error) {
+          console.error('Error fetching goal position:', error);
+        }
+      };
+      if (ballPosition) {
+        // sleep(30);
+        fetchNewBallPosition();
+      }
     };
 
     if (navigator.geolocation) {
@@ -31,7 +43,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchGoalPosition = async () => {
       try {
-        const response = await axios.get(url + '/fetch-goal-position');
+        const response = await axios.post(url + '/generate-goal-coordinate', { ballPosition: ballPosition });
         setGoalPosition(response.data.goalPosition);
       } catch (error) {
         console.error('Error fetching goal position:', error);
@@ -45,7 +57,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const checkGoalReached = async () => {
       try {
-        const response = await axios.get(url + '/check-goal-reached');
+        const response = await axios.post(url + '/check-goal-reached', { ballPosition: ballPosition , goalPosition: goalPosition });
         setGoalReached(response.data.goalReached);
         if (response.data.goalReached) {
           alert('GOAL!');
