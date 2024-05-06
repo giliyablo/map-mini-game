@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "types": [
+      "google.maps"
+    ],
     "target": "es5",
     "lib": [
       "dom",
@@ -18,10 +21,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
-    "types": [
-      "google.maps"
-    ]
+    "jsx": "preserve"
   },
   "include": [
     "src"
