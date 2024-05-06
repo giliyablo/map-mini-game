@@ -18,8 +18,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["google.maps"]
+    "jsx": "preserve",
+    "types": [
+      "google.maps"
+    ]
   },
   "include": [
     "src"

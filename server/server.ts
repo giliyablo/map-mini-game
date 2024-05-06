@@ -11,7 +11,7 @@ const currentBallPosition: [number, number] = [40.7128, -74.0060]; // New York C
 // Generate random coordinate within 1km radius of current ball position
 function generateRandomGoalCoordinate(): [number, number] {
   const options = { units: 'kilometers' };
-  const randomGoalPoint = randomPoint(currentBallPosition, 1, options);
+  const randomGoalPoint = randomPoint(currentBallPosition, 1);
   return randomGoalPoint.geometry.coordinates as [number, number];
 }
 

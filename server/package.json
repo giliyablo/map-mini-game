@@ -17,6 +17,8 @@
     "@turf/turf": "^6.5.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.8",
+    "@types/turf": "^3.5.32",
     "express": "^4.19.2",
+    "turf": "^3.0.14"
   }
 }
