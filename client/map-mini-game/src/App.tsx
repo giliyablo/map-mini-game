@@ -1,10 +1,14 @@
 // App.tsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import Axios for making HTTP requests
+import axios from 'axios';
 import Map from './Map';
 import Markers from './Markers';
 
 const App: React.FC = () => {
+  
+  const defaultCenter: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Default center
+  const defaultZoom = 10; // Default zoom level
+
   const [ballPosition, setBallPosition] = useState<[number, number] | null>(null);
   const [goalPosition, setGoalPosition] = useState<[number, number] | null>(null);
   const [goalReached, setGoalReached] = useState(false);
@@ -58,7 +62,7 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>Navigation Game</h1>
-      <Map apiKey="AIzaSyCdtGPc2gg0Wh8UWRWDGDy8ChwLNyB5DnI" />
+      <Map center={defaultCenter} zoom={defaultZoom} />
       <Markers ballPosition={ballPosition} goalPosition={goalPosition} goalReached={goalReached} />
     </div>
   );
