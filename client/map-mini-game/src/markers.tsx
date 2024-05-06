@@ -1,40 +1,56 @@
 // src/Markers.tsx
 import React, { useEffect } from 'react';
+import { Marker, GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 interface MarkersProps {
-  map: google.maps.Map | null;
-  ballPosition: google.maps.LatLng | null;
-  goalPosition: google.maps.LatLng | null;
+  ballPosition: [number, number] | null;
+  goalPosition: [number, number] | null;
+  goalReached: boolean;
 }
 
-const Markers: React.FC<MarkersProps> = ({ map, ballPosition, goalPosition }) => {
+const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReached }) => {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+  });
+
   useEffect(() => {
-    if (!map || !ballPosition || !goalPosition) return;
+    if (ballPosition && goalPosition && isLoaded) {
+      // Render map with markers
+      const map = new window.google.maps.Map(document.getElementById('map'), {
+        center: { lat: ballPosition[0], lng: ballPosition[1] },
+        zoom: 15,
+      });
 
-    const ballIcon = '/ball.png'; // Path to ball image
-    const goalIcon = '/goal.png'; // Path to goal image
+      const ballMarker = new window.google.maps.Marker({
+        position: { lat: ballPosition[0], lng: ballPosition[1] },
+        map,
+        title: 'Ball',
+        icon: {
+          url: '/ball.png', // Path to ball image
+          scaledSize: new window.google.maps.Size(40, 40), // Size of the image
+        },
+      });
 
-    const ballMarker = new window.google.maps.Marker({
-      position: ballPosition,
-      map,
-      title: 'Ball',
-      icon: ballIcon, // Set ball image as marker icon
-    });
+      const goalMarker = new window.google.maps.Marker({
+        position: { lat: goalPosition[0], lng: goalPosition[1] },
+        map,
+        title: 'Goal',
+        icon: {
+          url: '/goal.png', // Path to goal image
+          scaledSize: new window.google.maps.Size(40, 40), // Size of the image
+        },
+      });
 
-    const goalMarker = new window.google.maps.Marker({
-      position: goalPosition,
-      map,
-      title: 'Goal',
-      icon: goalIcon, // Set goal image as marker icon
-    });
+      if (goalReached) {
+        alert('GOAL!');
+      }
+    }
+  }, [ballPosition, goalPosition, goalReached, isLoaded]);
 
-    return () => {
-      ballMarker.setMap(null);
-      goalMarker.setMap(null);
-    };
-  }, [map, ballPosition, goalPosition]);
-
-  return null;
+  return (
+    <div id="map" style={{ width: '100%', height: '400px' }}></div>
+  );
 };
 
 export default Markers;

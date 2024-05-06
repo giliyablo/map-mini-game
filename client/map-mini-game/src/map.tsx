@@ -1,44 +1,27 @@
 // src/Map.tsx
-import React, { useEffect, useRef } from 'react';
-
-declare global {
-  interface Window {
-    google: any;
-  }
-}
+import React from 'react';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
 interface MapProps {
-  apiKey: string;
+  center: { lat: number; lng: number } | null;
+  zoom: number;
 }
 
-const Map: React.FC<MapProps> = ({ apiKey }) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstance = useRef<google.maps.Map | null>(null);
+const Map: React.FC<MapProps> = ({ center, zoom }) => {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+  });
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-
-    const googleMapScript = document.createElement('script');
-    googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
-    googleMapScript.async = true;
-    googleMapScript.defer = true;
-    window.document.body.appendChild(googleMapScript);
-
-    googleMapScript.onload = () => {
-      mapInstance.current = new window.google.maps.Map(mapRef.current, {
-        center: { lat: 0, lng: 0 },
-        zoom: 8,
-      });
-    };
-
-    return () => {
-      if (googleMapScript.parentNode) {
-        googleMapScript.parentNode.removeChild(googleMapScript);
-      }
-    };
-  }, [apiKey]);
-
-  return <div ref={mapRef} style={{ width: '100%', height: '500px' }} />;
+  return isLoaded ? (
+    <div style={{ height: '400px', width: '100%' }}>
+      <GoogleMap
+        mapContainerStyle={{ height: '100%', width: '100%' }}
+        center={center}
+        zoom={zoom}
+      ></GoogleMap>
+    </div>
+  ) : null;
 };
 
 export default Map;
