@@ -55,31 +55,19 @@ function moveBallTowardsGoal(ballPosition: [number, number], goalPosition: [numb
   return newBallPosition;
 }
 
-// Handler for updating ball position towards the goal
-app.post('/update-ball-position', (req: Request, res: Response) => {
-  const { ballPosition, goalPosition } = req.body;
-
-  if (!ballPosition || !goalPosition) {
-    return res.status(400).json({ error: 'Ball position and goal position are required.' });
-  }
-
-  // Move the ball towards the goal with a speed of 0.1 units per iteration
-  const newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
-
-  // Send the updated ball position back to the client
-  res.json({ newBallPosition });
-});
-
 app.post('/generate-goal-coordinate', (req: Request, res: Response) => {
-  const { ballPosition } = req.query;
-
+  const { ballPosition } = req.body;
+  console.log("ballPosition:"+ballPosition)
   if (!ballPosition) {
+    console.log("ballPosition:"+ballPosition)
     return res.status(400).json({ error: 'Ball position is required.' });
   }
 
   try {
     const ballPositionArray: [number, number] = JSON.parse(ballPosition as string);
+    console.log("ballPositionArray:"+ballPositionArray)
     const goalCoordinate = generateRandomGoalCoordinate(ballPositionArray);
+    console.log("goalCoordinate:"+goalCoordinate)
     res.json({ goalCoordinate });
   } catch (error) {
     res.status(400).json({ error: 'Invalid ball position format.' });
@@ -103,6 +91,21 @@ app.post('/check-goal-reached', (req: Request, res: Response) => {
   } else {
     return res.json({ goalReached: false });
   }
+});
+
+// Handler for updating ball position towards the goal
+app.post('/update-ball-position', (req: Request, res: Response) => {
+  const { ballPosition, goalPosition } = req.body;
+
+  if (!ballPosition || !goalPosition) {
+    return res.status(400).json({ error: 'Ball position and goal position are required.' });
+  }
+
+  // Move the ball towards the goal with a speed of 0.1 units per iteration
+  const newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
+
+  // Send the updated ball position back to the client
+  res.json({ newBallPosition });
 });
 
 app.listen(port, () => {

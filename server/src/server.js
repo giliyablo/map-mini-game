@@ -42,25 +42,18 @@ function moveBallTowardsGoal(ballPosition, goalPosition, speed) {
     ];
     return newBallPosition;
 }
-// Handler for updating ball position towards the goal
-app.post('/update-ball-position', function (req, res) {
-    var _a = req.body, ballPosition = _a.ballPosition, goalPosition = _a.goalPosition;
-    if (!ballPosition || !goalPosition) {
-        return res.status(400).json({ error: 'Ball position and goal position are required.' });
-    }
-    // Move the ball towards the goal with a speed of 0.1 units per iteration
-    var newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
-    // Send the updated ball position back to the client
-    res.json({ newBallPosition: newBallPosition });
-});
 app.post('/generate-goal-coordinate', function (req, res) {
-    var ballPosition = req.query.ballPosition;
+    var ballPosition = req.body.ballPosition;
+    console.log("ballPosition:" + ballPosition);
     if (!ballPosition) {
+        console.log("ballPosition:" + ballPosition);
         return res.status(400).json({ error: 'Ball position is required.' });
     }
     try {
         var ballPositionArray = JSON.parse(ballPosition);
+        console.log("ballPositionArray:" + ballPositionArray);
         var goalCoordinate = generateRandomGoalCoordinate(ballPositionArray);
+        console.log("goalCoordinate:" + goalCoordinate);
         res.json({ goalCoordinate: goalCoordinate });
     }
     catch (error) {
@@ -82,6 +75,17 @@ app.post('/check-goal-reached', function (req, res) {
     else {
         return res.json({ goalReached: false });
     }
+});
+// Handler for updating ball position towards the goal
+app.post('/update-ball-position', function (req, res) {
+    var _a = req.body, ballPosition = _a.ballPosition, goalPosition = _a.goalPosition;
+    if (!ballPosition || !goalPosition) {
+        return res.status(400).json({ error: 'Ball position and goal position are required.' });
+    }
+    // Move the ball towards the goal with a speed of 0.1 units per iteration
+    var newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
+    // Send the updated ball position back to the client
+    res.json({ newBallPosition: newBallPosition });
 });
 app.listen(port, function () {
     console.log("Server is listening at http://localhost:".concat(port));
