@@ -14,11 +14,12 @@ const App: React.FC = () => {
   const [goalPosition, setGoalPosition] = useState<[number, number] | null>(null);
   const [goalReached, setGoalReached] = useState(false);
 
-  // Update ball position on user movement
   useEffect(() => {
+    // Update ball position on user movement
     const handleMovement = (event: any) => {
       const newPosition: [number, number] = [event.coords.latitude, event.coords.longitude];
       console.log("newPosition: " + newPosition)
+
       setBallPosition(newPosition);
       console.log("ballPosition: " + ballPosition)
     };
@@ -26,33 +27,36 @@ const App: React.FC = () => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(handleMovement);
     }
-  }, [ballPosition]);
 
-  // Fetch goal position from the server
+  }, []);
+
   useEffect(() => {
+    // Fetch goal position from the server
     const fetchGoalPosition = async () => {
       try {
-        console.log("ballPosition test  " + ballPosition)
+        console.log("ballPosition: " + ballPosition);
         const response = await axios.post(url + '/generate-goal-coordinate', { ballPosition: ballPosition });
-        console.log("response.data.goalPosition: " + response.data.goalPosition)
+        console.log("response.data.goalPosition: " + response.data.goalPosition);
+
         setGoalPosition(response.data.goalPosition);
-        console.log("goalPosition: " + goalPosition)
+        console.log("goalPosition: " + goalPosition);
       } catch (error) {
         console.error('Error fetching goal position:', error);
       }
     };
 
     fetchGoalPosition();
+
   }, [goalPosition]);
 
-  // Check if the ball has reached the goal
   useEffect(() => {
+    // Check if the ball has reached the goal
     const checkGoalReached = async () => {
       try {
         const response = await axios.post(url + '/check-goal-reached', { ballPosition: ballPosition, goalPosition: goalPosition });
         
-        setGoalReached(response.data.goalReached);
         if (response.data.goalReached) {
+          setGoalReached(response.data.goalReached);
           alert('GOAL!');
         }
       } catch (error) {
