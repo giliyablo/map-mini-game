@@ -1,65 +1,56 @@
+// server.ts
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = 3000;
+const port = 3001;
+
+let ballPosition: [number, number] | null = null;
+let goalPosition: [number, number] | null = null;
 
 app.use(express.json());
 
-// Generate a random number between min and max
-function getRandomInRange(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
-
-// Generate a random goal coordinate within 1km radius of the ball position
-function generateRandomGoalCoordinate(ballPosition: [number, number]): [number, number] {
-  const earthRadius = 6371; // Earth's radius in km
-  const maxDistance = 1; // Maximum distance from ball in km
-
-  // Generate a random distance between 0 and maxDistance
-  const distance = Math.sqrt(Math.random()) * maxDistance;
-
-  // Generate a random angle
-  const angle = Math.random() * Math.PI * 2;
-
-  // Calculate the new latitude and longitude
-  const newLat = ballPosition[0] + (distance / earthRadius) * (180 / Math.PI) * Math.cos(angle);
-  const newLng = ballPosition[1] + (distance / earthRadius) * (180 / Math.PI) * Math.sin(angle) / Math.cos(ballPosition[0] * Math.PI / 180);
-
-  return [newLat, newLng];
-}
-
-app.get('/generate-goal-coordinate', (req: Request, res: Response) => {
-  const { ballPosition } = req.query;
-
-  if (!ballPosition) {
-    return res.status(400).json({ error: 'Ball position is required.' });
-  }
-
-  try {
-    const ballPositionArray: [number, number] = JSON.parse(ballPosition as string);
-    const goalCoordinate = generateRandomGoalCoordinate(ballPositionArray);
-    res.json({ goalCoordinate });
-  } catch (error) {
-    res.status(400).json({ error: 'Invalid ball position format.' });
-  }
+// Endpoint to update ball position
+app.post('/update-ball-position', (req: Request, res: Response) => {
+  const { position } = req.body;
+  ballPosition = position;
+  res.sendStatus(200);
 });
 
-// Check if the ball has reached the goal
-app.post('/check-goal-reached', (req: Request, res: Response) => {
-  const { ballPosition, goalPosition } = req.body;
-
-  if (!ballPosition || !goalPosition) {
-    return res.status(400).json({ error: 'Ball position and goal position are required.' });
+// Endpoint to fetch goal position
+app.get('/fetch-goal-position', (req: Request, res: Response) => {
+  if (!ballPosition) {
+    return res.status(400).json({ error: 'Ball position not available.' });
   }
 
-  // Calculate the distance between ball and goal
-  const distance = Math.sqrt(Math.pow(goalPosition[0] - ballPosition[0], 2) + Math.pow(goalPosition[1] - ballPosition[1], 2));
+  // Generate a random goal coordinate within 1km radius of the ball position
+  const generateRandomGoalCoordinate = (): [number, number] => {
+    const earthRadius = 6371; // Earth's radius in km
+    const maxDistance = 1; // Maximum distance from ball in km
 
-  // Check if the distance is less than 0.01km (10 meters)
-  if (distance < 0.01) {
-    return res.json({ goalReached: true });
+    const distance = Math.sqrt(Math.random()) * maxDistance;
+    const angle = Math.random() * Math.PI * 2;
+
+    const newLat = ballPosition[0] + (distance / earthRadius) * (180 / Math.PI) * Math.cos(angle);
+    const newLng = ballPosition[1] + (distance / earthRadius) * (180 / Math.PI) * Math.sin(angle) / Math.cos(ballPosition[0] * Math.PI / 180);
+
+    return [newLat, newLng];
+  };
+
+  goalPosition = generateRandomGoalCoordinate();
+  res.json({ goalPosition });
+});
+
+// Endpoint to check if the ball has reached the goal
+app.get('/check-goal-reached', (req: Request, res: Response) => {
+  if (!ballPosition || !goalPosition) {
+    return res.status(400).json({ error: 'Ball or goal position not available.' });
+  }
+
+  const distance = Math.sqrt(Math.pow(goalPosition[0] - ballPosition[0], 2) + Math.pow(goalPosition[1] - ballPosition[1], 2));
+  if (distance < 0.01) { // 10 meters in km
+    res.json({ goalReached: true });
   } else {
-    return res.json({ goalReached: false });
+    res.json({ goalReached: false });
   }
 });
 
