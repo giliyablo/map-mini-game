@@ -57,18 +57,16 @@ function moveBallTowardsGoal(ballPosition: [number, number], goalPosition: [numb
 
 app.post('/generate-goal-coordinate', (req: Request, res: Response) => {
   const { ballPosition } = req.body;
-  console.log("ballPosition:"+ballPosition)
   if (!ballPosition) {
-    console.log("ballPosition:"+ballPosition)
+    console.log("ballPosition is null or undefined");
     return res.status(400).json({ error: 'Ball position is required.' });
   }
-
+  
   try {
-    const ballPositionArray: [number, number] = JSON.parse(ballPosition as string);
-    console.log("ballPositionArray:"+ballPositionArray)
-    const goalCoordinate = generateRandomGoalCoordinate(ballPositionArray);
-    console.log("goalCoordinate:"+goalCoordinate)
-    res.json({ goalCoordinate });
+    console.log("ballPosition: " + ballPosition);
+    const goalPosition = generateRandomGoalCoordinate(ballPosition);
+    console.log("goalPosition: " + goalPosition);
+    res.json({ goalPosition });
   } catch (error) {
     res.status(400).json({ error: 'Invalid ball position format.' });
   }
@@ -86,6 +84,7 @@ app.post('/check-goal-reached', (req: Request, res: Response) => {
   const distance = Math.sqrt(Math.pow(goalPosition[0] - ballPosition[0], 2) + Math.pow(goalPosition[1] - ballPosition[1], 2));
 
   // Check if the distance is less than 0.01km (10 meters)
+  console.log("distance: " + distance)
   if (distance < 0.01) {
     return res.json({ goalReached: true });
   } else {
@@ -104,6 +103,7 @@ app.post('/update-ball-position', (req: Request, res: Response) => {
   // Move the ball towards the goal with a speed of 0.1 units per iteration
   const newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
 
+  console.log("newBallPosition: " + newBallPosition)
   // Send the updated ball position back to the client
   res.json({ newBallPosition });
 });

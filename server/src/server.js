@@ -44,17 +44,15 @@ function moveBallTowardsGoal(ballPosition, goalPosition, speed) {
 }
 app.post('/generate-goal-coordinate', function (req, res) {
     var ballPosition = req.body.ballPosition;
-    console.log("ballPosition:" + ballPosition);
     if (!ballPosition) {
-        console.log("ballPosition:" + ballPosition);
+        console.log("ballPosition is null or undefined");
         return res.status(400).json({ error: 'Ball position is required.' });
     }
     try {
-        var ballPositionArray = JSON.parse(ballPosition);
-        console.log("ballPositionArray:" + ballPositionArray);
-        var goalCoordinate = generateRandomGoalCoordinate(ballPositionArray);
-        console.log("goalCoordinate:" + goalCoordinate);
-        res.json({ goalCoordinate: goalCoordinate });
+        console.log("ballPosition: " + ballPosition);
+        var goalPosition = generateRandomGoalCoordinate(ballPosition);
+        console.log("goalPosition: " + goalPosition);
+        res.json({ goalPosition: goalPosition });
     }
     catch (error) {
         res.status(400).json({ error: 'Invalid ball position format.' });
