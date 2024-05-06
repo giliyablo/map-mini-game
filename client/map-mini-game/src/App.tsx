@@ -75,7 +75,8 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>Navigation Game</h1>
-      <Map center={defaultCenter} zoom={defaultZoom} />
+      <Map center={ballPosition ? { lat: ballPosition[0], lng: ballPosition[1] } : defaultCenter} 
+           zoom={defaultZoom} />
       <Markers ballPosition={ballPosition} goalPosition={goalPosition} goalReached={goalReached} />
     </div>
   );
