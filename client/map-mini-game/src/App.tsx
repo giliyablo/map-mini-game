@@ -1,7 +1,7 @@
-// src/App.tsx
 import React, { useState, useEffect } from 'react';
 import Map from './Map';
 import Markers from './Markers';
+import axios from 'axios'; // Import Axios for making HTTP requests
 
 const App: React.FC = () => {
   const [ballPosition, setBallPosition] = useState<google.maps.LatLng | null>(null);
@@ -12,13 +12,16 @@ const App: React.FC = () => {
     setBallPosition(newPosition);
   };
 
-  // Simulated function to fetch goal position
-  const fetchGoalPosition = () => {
-    // Simulate fetching goal position from server
-    const randomLat = Math.random() * 0.02 + 40.71; // Random latitude around NYC
-    const randomLng = Math.random() * 0.02 - 74.01; // Random longitude around NYC
-    const goalPos = new google.maps.LatLng(randomLat, randomLng);
-    setGoalPosition(goalPos);
+  // Function to fetch goal position from server
+  const fetchGoalPosition = async () => {
+    try {
+      const response = await axios.get('/generate-goal-coordinate'); // Assuming server is running on the same host
+      const goalCoordinate = response.data.goalCoordinate;
+      const goalPos = new google.maps.LatLng(goalCoordinate[0], goalCoordinate[1]);
+      setGoalPosition(goalPos);
+    } catch (error) {
+      console.error('Error fetching goal position:', error);
+    }
   };
 
   // Fetch goal position when component mounts
@@ -39,7 +42,7 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>Navigation Game</h1>
-      <Map apiKey="AIzaSyCdtGPc2gg0Wh8UWRWDGDy8ChwLNyB5DnI" /> {/* Pass apiKey prop */}
+      <Map apiKey="AIzaSyCdtGPc2gg0Wh8UWRWDGDy8ChwLNyB5DnI" />
       <Markers map={null} ballPosition={ballPosition} goalPosition={goalPosition} />
     </div>
   );
