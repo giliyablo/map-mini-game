@@ -67,6 +67,7 @@ app.post('/check-goal-reached', function (req, res) {
     // Calculate the distance between ball and goal
     var distance = Math.sqrt(Math.pow(goalPosition[0] - ballPosition[0], 2) + Math.pow(goalPosition[1] - ballPosition[1], 2));
     // Check if the distance is less than 0.01km (10 meters)
+    console.log("distance: " + distance);
     if (distance < 0.01) {
         return res.json({ goalReached: true });
     }
@@ -82,6 +83,7 @@ app.post('/update-ball-position', function (req, res) {
     }
     // Move the ball towards the goal with a speed of 0.1 units per iteration
     var newBallPosition = moveBallTowardsGoal(ballPosition, goalPosition, 0.1);
+    console.log("newBallPosition: " + newBallPosition);
     // Send the updated ball position back to the client
     res.json({ newBallPosition: newBallPosition });
 });
