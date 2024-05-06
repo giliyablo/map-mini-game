@@ -11,7 +11,7 @@ interface MarkersProps {
 const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReached }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
+    googleMapsApiKey: 'AIzaSyCdtGPc2gg0Wh8UWRWDGDy8ChwLNyB5DnI',
   });
 
   useEffect(() => {

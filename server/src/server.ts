@@ -1,10 +1,12 @@
-import * as express from 'express';
+const express = require('express');
+const cors = require('cors');
 import { Request, Response } from 'express';
 
 const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(cors()); // Add this line to enable CORS
 
 // Generate a random number between min and max
 function getRandomInRange(min: number, max: number) {

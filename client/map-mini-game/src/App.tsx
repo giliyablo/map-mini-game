@@ -5,7 +5,8 @@ import Map from './Map';
 import Markers from './Markers';
 
 const App: React.FC = () => {
-  
+
+  const url = "http://localhost:3001"
   const defaultCenter: google.maps.LatLngLiteral = { lat: 51.5074, lng: -0.1278 }; // Default center
   const defaultZoom = 10; // Default zoom level
 
@@ -18,7 +19,7 @@ const App: React.FC = () => {
     const handleMovement = (event: any) => {
       const newPosition: [number, number] = [event.coords.latitude, event.coords.longitude];
       setBallPosition(newPosition);
-      axios.post('/update-ball-position', { position: newPosition });
+      axios.post(url + '/update-ball-position', { position: newPosition });
     };
 
     if (navigator.geolocation) {
@@ -30,7 +31,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchGoalPosition = async () => {
       try {
-        const response = await axios.get('/fetch-goal-position');
+        const response = await axios.get(url + '/fetch-goal-position');
         setGoalPosition(response.data.goalPosition);
       } catch (error) {
         console.error('Error fetching goal position:', error);
@@ -44,7 +45,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const checkGoalReached = async () => {
       try {
-        const response = await axios.get('/check-goal-reached');
+        const response = await axios.get(url + '/check-goal-reached');
         setGoalReached(response.data.goalReached);
         if (response.data.goalReached) {
           alert('GOAL!');
