@@ -28,7 +28,7 @@ const App: React.FC = () => {
       navigator.geolocation.watchPosition(handleMovement);
     }
 
-  }, []);
+  }, [ballPosition]);
 
   useEffect(() => {
     // Fetch goal position from the server
