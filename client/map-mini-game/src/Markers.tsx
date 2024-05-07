@@ -1,6 +1,6 @@
-// src/Markers.tsx
 import React, { useEffect } from 'react';
-import { Marker, GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import googleMapsApiKey from './googleMapsApiKey'; // Import API key from the file where it's stored
 
 interface MarkersProps {
   ballPosition: [number, number] | null;
@@ -11,7 +11,7 @@ interface MarkersProps {
 const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReached }) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyCdtGPc2gg0Wh8UWRWDGDy8ChwLNyB5DnI',
+    googleMapsApiKey: googleMapsApiKey, // Add your Google Maps API key here
   });
 
   useEffect(() => {
