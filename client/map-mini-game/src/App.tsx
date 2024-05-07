@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Map from './Map';
-// import Markers from './Markers';
 
 const App: React.FC = () => {
   const url = "http://localhost:3001";
