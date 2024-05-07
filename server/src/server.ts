@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+
 import { Request, Response } from 'express';
 
 const app = express();
@@ -107,6 +109,9 @@ app.post('/update-ball-position', (req: Request, res: Response) => {
   // Send the updated ball position back to the client
   res.json({ newBallPosition });
 });
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);

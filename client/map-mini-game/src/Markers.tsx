@@ -27,7 +27,7 @@ const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReach
         map,
         title: 'Ball',
         icon: {
-          url: '/public/ball.png', // Path to ball image
+          url: 'http://localhost:3001/ball.png', // Path to ball image
           scaledSize: new window.google.maps.Size(40, 40), // Size of the image
         },
       });
@@ -37,7 +37,7 @@ const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReach
         map,
         title: 'Goal',
         icon: {
-          url: '/public/goal.png', // Path to goal image
+          url: 'http://localhost:3001/goal.png', // Path to goal image
           scaledSize: new window.google.maps.Size(40, 40), // Size of the image
         },
       });

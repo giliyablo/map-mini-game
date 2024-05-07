@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var cors = require('cors');
+var path = require('path');
 var app = express();
 var port = 3001;
 app.use(express.json());
@@ -87,6 +88,8 @@ app.post('/update-ball-position', function (req, res) {
     // Send the updated ball position back to the client
     res.json({ newBallPosition: newBallPosition });
 });
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 app.listen(port, function () {
     console.log("Server is listening at http://localhost:".concat(port));
 });
