@@ -1,6 +1,5 @@
+// Markers.tsx
 import React, { useEffect } from 'react';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import googleMapsApiKey from './googleMapsApiKey'; // Import API key from the file where it's stored
 
 interface MarkersProps {
   ballPosition: [number, number] | null;
@@ -9,22 +8,11 @@ interface MarkersProps {
 }
 
 const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReached }) => {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: googleMapsApiKey, // Add your Google Maps API key here
-  });
-
   useEffect(() => {
-    if (ballPosition && goalPosition && isLoaded) {
-      // Render map with markers
-      const map = new window.google.maps.Map(document.getElementById('map'), {
-        center: { lat: ballPosition[0], lng: ballPosition[1] },
-        zoom: 15,
-      });
-
+    if (ballPosition && goalPosition) {
+      // Render markers using Google Maps JavaScript API
       const ballMarker = new window.google.maps.Marker({
         position: { lat: ballPosition[0], lng: ballPosition[1] },
-        map,
         title: 'Ball',
         icon: {
           url: 'http://localhost:3001/ball.png', // Path to ball image
@@ -34,7 +22,6 @@ const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReach
 
       const goalMarker = new window.google.maps.Marker({
         position: { lat: goalPosition[0], lng: goalPosition[1] },
-        map,
         title: 'Goal',
         icon: {
           url: 'http://localhost:3001/goal.png', // Path to goal image
@@ -46,11 +33,9 @@ const Markers: React.FC<MarkersProps> = ({ ballPosition, goalPosition, goalReach
         alert('GOAL!');
       }
     }
-  }, [ballPosition, goalPosition, goalReached, isLoaded]);
+  }, [ballPosition, goalPosition, goalReached]);
 
-  return (
-    <div id="map" style={{ width: '100%', height: '400px' }}></div>
-  );
+  return null; // Markers are rendered using Google Maps JavaScript API directly
 };
 
 export default Markers;
