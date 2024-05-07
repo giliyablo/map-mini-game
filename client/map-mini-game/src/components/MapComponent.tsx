@@ -23,7 +23,11 @@ const MapComponent: React.FC = () => {
     const ballMarker = new google.maps.Marker({
       position: { lat: 0, lng: 0 },
       map: map,
-      title: 'Ball Marker'
+      title: 'Ball Marker',
+      icon: {
+        url: 'http://localhost:3001/ball.png', // Path to ball image
+        scaledSize: new window.google.maps.Size(40, 40), // Size of the image
+      },
     });
     setBallMarker(ballMarker);
 
@@ -32,7 +36,11 @@ const MapComponent: React.FC = () => {
     const goalMarker = new google.maps.Marker({
       position: goalMarkerPosition,
       map: map,
-      title: 'Goal Marker'
+      title: 'Goal Marker',
+      icon: {
+        url: 'http://localhost:3001/goal.png', // Path to goal image
+        scaledSize: new window.google.maps.Size(40, 40), // Size of the image
+      },
     });
     setGoalMarker(goalMarker);
 
